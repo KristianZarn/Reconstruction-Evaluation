@@ -2,7 +2,7 @@
 
 #include <Eigen/Core>
 
-Mesh ReadPly(std::string filename) {
+Mesh ReadPly(const std::string& filename) {
 
     // Open file
     std::ifstream fs(filename, std::ios::binary);
@@ -56,20 +56,33 @@ Mesh ReadPly(std::string filename) {
     return mesh;
 }
 
-float MeanDistance(std::vector<float> distances) {
-    float sum = 0.0f;
+double MeanDistance(const std::vector<float>& distances) {
+    double sum = 0.0;
     for (const auto distance : distances) {
         sum += distance;
     }
     return (sum / distances.size());
 }
 
-float AccuracyMeasure(std::vector<float> distances, float percentage) {
-    // TODO
-    return 0;
+double AccuracyMeasure(const std::vector<float>& distances, double percentage) {
+    assert(percentage >= 0.0 && percentage < 1.0);
+
+    // Copy original vector and sort it
+    auto distances_copy = distances;
+    std::sort(distances_copy.begin(), distances_copy.end());
+
+    // Get value
+    int idx = static_cast<int>(floor(distances.size() * percentage));
+    return distances_copy[idx];
 }
 
-float CompletenessMeausre(std::vector<float> distances, float tolerance) {
-    // TODO
-    return 0;
+double CompletenessMeausre(const std::vector<float>& distances, double tolerance) {
+    int inlier_sum = 0;
+    for (float distance : distances) {
+        if (distance <= tolerance) {
+            inlier_sum++;
+        }
+    }
+    double percentage = static_cast<double>(inlier_sum) / distances.size();
+    return percentage;
 }

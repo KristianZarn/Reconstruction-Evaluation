@@ -16,8 +16,11 @@ set(SOURCE_FILES
         src/eval/Mesh.cpp
         src/eval/PointCloud.h
         src/eval/PointCloud.cpp
+        src/eval/nanoflann.hpp
         src/eval/Helpers.h
         src/eval/Helpers.cpp
+        src/eval/EvaluationStats.h
+        src/eval/EvaluationStats.cpp
         src/tinyply/tinyply.h
         src/tinyply/tinyply.cpp)
 
@@ -33,6 +36,10 @@ set(LIBRARIES
         ${FLANN_LIBRARIES})
 
 # Targets
-add_executable(evaluation_c main_c.cpp ${SOURCE_FILES})
-target_include_directories(evaluation_c PRIVATE ${INCLUDE_DIRS})
-target_link_libraries(evaluation_c ${LIBRARIES})
+add_executable(single_eval main_single_eval.cpp ${SOURCE_FILES})
+target_include_directories(single_eval PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(single_eval ${LIBRARIES})
+
+add_executable(batch_eval main_batch_eval.cpp ${SOURCE_FILES})
+target_include_directories(batch_eval PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(batch_eval ${LIBRARIES})

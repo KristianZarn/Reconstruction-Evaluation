@@ -8,10 +8,10 @@
 #include "Mesh.h"
 #include "tinyply/tinyply.h"
 
-Mesh ReadPly(std::string filename);
+Mesh ReadPly(const std::string& filename);
 
-float MeanDistance(std::vector<float> distances);
-float AccuracyMeasure(std::vector<float> distances, float percentage);
-float CompletenessMeausre(std::vector<float> distances, float tolerance);
+double MeanDistance(const std::vector<float>& distances);
+double AccuracyMeasure(const std::vector<float>& distances, double percentage);
+double CompletenessMeausre(const std::vector<float>& distances, double tolerance);
 
 #endif //SANDBOX_EVALUATION_HELPERS_H
