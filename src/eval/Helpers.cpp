@@ -13,16 +13,6 @@ Mesh ReadPly(std::string filename) {
     tinyply::PlyFile file;
     file.parse_header(fs);
 
-    // DEBUG
-    // std::cout << "........................................................................\n";
-    // for (auto c : file.get_comments()) std::cout << "Comment: " << c << std::endl;
-    // for (auto e : file.get_elements())
-    // {
-    //     std::cout << "element - " << e.name << " (" << e.size << ")" << std::endl;
-    //     for (auto p : e.properties) std::cout << "\tproperty - " << p.name << " (" << tinyply::PropertyTable[p.propertyType].str << ")" << std::endl;
-    // }
-    // std::cout << "........................................................................\n";
-
     // Read data
     std::shared_ptr<tinyply::PlyData> vertices;
     try {
@@ -55,13 +45,31 @@ Mesh ReadPly(std::string filename) {
         Eigen::Vector3f vertex_eig(vertices_raw[i * 3 + 0],
                                    vertices_raw[i * 3 + 1],
                                    vertices_raw[i * 3 + 2]);
-        mesh.add_vertex(vertex_eig);
+        mesh.AddVertex(vertex_eig);
     }
     for (int i = 0; i < faces->count; i++) {
         Eigen::Vector3i face_eig(faces_raw[i * 3 + 0],
                                  faces_raw[i * 3 + 1],
                                  faces_raw[i * 3 + 2]);
-        mesh.add_face(face_eig);
+        mesh.AddFace(face_eig);
     }
     return mesh;
+}
+
+float MeanDistance(std::vector<float> distances) {
+    float sum = 0.0f;
+    for (const auto distance : distances) {
+        sum += distance;
+    }
+    return (sum / distances.size());
+}
+
+float AccuracyMeasure(std::vector<float> distances, float percentage) {
+    // TODO
+    return 0;
+}
+
+float CompletenessMeausre(std::vector<float> distances, float tolerance) {
+    // TODO
+    return 0;
 }

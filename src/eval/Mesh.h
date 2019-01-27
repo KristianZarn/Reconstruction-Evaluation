@@ -9,15 +9,16 @@ class PointCloud;
 
 class Mesh {
 public:
-    void add_vertex(Eigen::Vector3f& vertex);
-    int num_vertices() const;
-    Eigen::Vector3f vertex(int v) const;
+    void AddVertex(Eigen::Vector3f& vertex);
+    int NumVertices() const;
+    Eigen::Vector3f Vertex(int v) const;
 
-    void add_face(Eigen::Vector3i& face);
-    int num_faces() const;
-    Eigen::Vector3i face(int f) const;
+    void AddFace(Eigen::Vector3i& face);
+    int NumFaces() const;
+    Eigen::Vector3i Face(int f) const;
 
-    bool sample(const int N, PointCloud &point_cloud) const;
+    PointCloud Sample(int num_samples) const;
+    PointCloud AsPointCloud() const;
 
 private:
     std::vector<Eigen::Vector3f> vertices;

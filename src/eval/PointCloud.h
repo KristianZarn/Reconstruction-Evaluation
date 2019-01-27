@@ -9,30 +9,17 @@ class Mesh;
 
 class PointCloud {
 public:
-    PointCloud() = default;
-    PointCloud(const PointCloud &point_cloud);
+    void AddPoint(const Eigen::Vector3f& point);
+    int NumPoints() const;
+    Eigen::Vector3f Point(int p) const;
 
-    void add_point(const Eigen::Vector3f &point);
-    unsigned int num_points() const;
+    std::vector<float> ComputeDistanceBF(const PointCloud& query) const;
+    std::vector<float> ComputeDistance(const PointCloud& query) const;
 
-    bool compute_distance(const Mesh &mesh, float &_distance);
+    void WriteToTxt(const std::string& filename) const;
 
 private:
     std::vector<Eigen::Vector3f> points;
-
-    /** \brief Compute triangle point distance and corresponding closest point.
-     * \param[in] point point
-     * \param[in] v1 first vertex
-     * \param[in] v2 second vertex
-     * \param[in] v3 third vertex
-     * \param[out] ray corresponding closest point
-     * \return distance
-     */
-    float triangle_point_distance(const Eigen::Vector3f point,
-                                  const Eigen::Vector3f v1,
-                                  const Eigen::Vector3f v2,
-                                  const Eigen::Vector3f v3,
-                                  Eigen::Vector3f& closest_point);
 };
 
 #endif //SANDBOX_EVALUATION_POINTCLOUD_H
