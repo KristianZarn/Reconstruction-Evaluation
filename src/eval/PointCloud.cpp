@@ -5,9 +5,6 @@
 #include <fstream>
 #include <omp.h>
 
-#include "triangle_point/poitri.h"
-#include "kdtree_flann.h"
-
 void PointCloud::AddPoint(const Eigen::Vector3f& point) {
     this->points.push_back(point);
 }
@@ -54,19 +51,12 @@ std::vector<float> PointCloud::ComputeDistance(const PointCloud& query) const {
     }
 
     // Compute distances with kd tree
-    kdt::KDTreeFlannf kd_tree;
-    kd_tree.setData(this_data, true);
-    kd_tree.build();
-
-    Eigen::MatrixXf dists;
-    Eigen::MatrixXi idx;
-    size_t knn = 1;
-    kd_tree.query(query_data, knn, idx, dists);
+    // TODO
 
     // Convert result from eigen to vector
     std::vector<float> distances(static_cast<unsigned long>(query.NumPoints()));
     for (int i = 0; i < query.NumPoints(); i++) {
-        distances[i] = dists(0, i);
+        distances[i] = 0.0f;
     }
 
     return distances;

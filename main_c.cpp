@@ -36,20 +36,20 @@ int main(int argc, char** argv) {
               << "\n\tnum points: " << reconstruction_pc.NumPoints() << std::endl;
 
     // Compute accuracy (rec to ref)
-    // std::cout << "Computing distance ... " << std::flush;
-    // std::vector<float> rec_to_ref = reference_pc.ComputeDistanceBF(reconstruction_pc);
-    // float accuracy = MeanDistance(rec_to_ref);
-    // std::cout << "DONE" << std::endl;
+    std::cout << "Computing distance ... " << std::flush;
+    std::vector<float> rec_to_ref = reference_pc.ComputeDistanceBF(reconstruction_pc);
+    float accuracy = MeanDistance(rec_to_ref);
+    std::cout << "DONE" << std::endl;
 
     // Compute completeness (ref to rec)
-    // std::cout << "Computing distance ... " << std::flush;
-    // std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistanceBF(reference_pc);
-    // float completeness = MeanDistance(ref_to_rec);
-    // std::cout << "DONE" << std::endl;
+    std::cout << "Computing distance ... " << std::flush;
+    std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistanceBF(reference_pc);
+    float completeness = MeanDistance(ref_to_rec);
+    std::cout << "DONE" << std::endl;
 
     // Output
-    // std::cout << "Accuracy (input to reference): " << accuracy << std::endl;
-    // std::cout << "Completeness (reference to input): " << completeness << std::endl;
+    std::cout << "Accuracy (input to reference): " << accuracy << std::endl;
+    std::cout << "Completeness (reference to input): " << completeness << std::endl;
 
     // Write point clouds to file
     reference_pc.WriteToTxt("../resources/ref_pc.dat");
