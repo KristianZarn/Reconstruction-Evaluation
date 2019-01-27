@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <chrono>
 
 #include "eval/Mesh.h"
 #include "eval/PointCloud.h"
@@ -10,7 +11,7 @@
 int main(int argc, char** argv) {
 
     std::string reference_filename = "../dataset/sod/ref.ply";
-    std::string reconstruction_filename = "../dataset/sod/003.ply";
+    std::string reconstruction_filename = "../dataset/sod/030.ply";
 
     // Read meshes
     Mesh reference_mesh = ReadPly(reference_filename);
@@ -24,7 +25,10 @@ int main(int argc, char** argv) {
               << "\n\tnum vertices: " << reconstruction_mesh.NumVertices()
               << "\n\tnum faces: " << reconstruction_mesh.NumFaces() << std::endl;
 
-    PointCloud reference_pc = reference_mesh.AsPointCloud();
+
+    // PointCloud reference_pc = reference_mesh.AsPointCloud();
+    PointCloud reference_pc = reference_mesh.Sample(20000);
+
     // int num_samples = reconstruction_mesh.NumVertices() * 2;
     int num_samples = 10000;
     PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
@@ -37,15 +41,25 @@ int main(int argc, char** argv) {
 
     // Compute accuracy (rec to ref)
     std::cout << "Computing distance ... " << std::flush;
-    std::vector<float> rec_to_ref = reference_pc.ComputeDistanceBF(reconstruction_pc);
+    auto time_begin = std::chrono::steady_clock::now();
+
+    std::vector<float> rec_to_ref = reference_pc.ComputeDistance(reconstruction_pc);
     float accuracy = MeanDistance(rec_to_ref);
-    std::cout << "DONE" << std::endl;
+
+    auto time_end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed = time_end - time_begin;
+    std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
 
     // Compute completeness (ref to rec)
     std::cout << "Computing distance ... " << std::flush;
-    std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistanceBF(reference_pc);
+    time_begin = std::chrono::steady_clock::now();
+
+    std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistance(reference_pc);
     float completeness = MeanDistance(ref_to_rec);
-    std::cout << "DONE" << std::endl;
+
+    time_end = std::chrono::steady_clock::now();
+    time_elapsed = time_end - time_begin;
+    std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
 
     // Output
     std::cout << "Accuracy (input to reference): " << accuracy << std::endl;

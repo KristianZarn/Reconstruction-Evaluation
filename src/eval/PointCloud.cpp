@@ -5,6 +5,8 @@
 #include <fstream>
 #include <omp.h>
 
+#include "nanoflann.hpp"
+
 void PointCloud::AddPoint(const Eigen::Vector3f& point) {
     this->points.push_back(point);
 }
@@ -40,23 +42,30 @@ std::vector<float> PointCloud::ComputeDistanceBF(const PointCloud& query) const 
 std::vector<float> PointCloud::ComputeDistance(const PointCloud& query) const {
 
     // Convert points to eigen matrix
-    Eigen::MatrixXf this_data(3, points.size());
+    Eigen::MatrixXf this_data(points.size(), 3);
     for (int i = 0; i < points.size(); i++) {
-        this_data.col(i) = points[i];
+        this_data.row(i) = points[i];
     }
 
-    Eigen::MatrixXf query_data(3, query.NumPoints());
-    for (int i = 0; i < query.NumPoints(); i++) {
-        query_data.col(i) = query.Point(i);
-    }
+    // Initialize kd tree
+    typedef nanoflann::KDTreeEigenMatrixAdaptor<Eigen::MatrixXf> KDTree;
+    KDTree kd_tree(3, std::cref(this_data), 10);
+    kd_tree.index->buildIndex();
 
-    // Compute distances with kd tree
-    // TODO
-
-    // Convert result from eigen to vector
+    // Compute closest distances
     std::vector<float> distances(static_cast<unsigned long>(query.NumPoints()));
     for (int i = 0; i < query.NumPoints(); i++) {
-        distances[i] = 0.0f;
+        Eigen::Vector3f point = query.Point(i);
+
+        unsigned long num_results = 1;
+        std::vector<size_t> idx(num_results);
+        std::vector<float> dist_sqr(num_results);
+        nanoflann::KNNResultSet<float> result_set(num_results);
+        result_set.init(&idx[0], &dist_sqr[0]);
+
+        kd_tree.index->findNeighbors(result_set, point.data(), nanoflann::SearchParams(10));
+
+        distances[i] = static_cast<float>(sqrt(dist_sqr[0]));
     }
 
     return distances;
