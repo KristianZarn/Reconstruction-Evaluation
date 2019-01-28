@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
     std::cout << "Ref to rec distance: " << ref_to_rec_dist << std::endl;
     std::cout << "Completeness (" << completeness_tolerance << "): " << completeness << std::endl;
 
-    // Write point clouds to file
+    // Write point clouds to file (for debugging)
     reference_pc.WriteToTxt("../resources/ref_pc.dat");
     reconstruction_pc.WriteToTxt("../resources/rec_pc.dat");
 
