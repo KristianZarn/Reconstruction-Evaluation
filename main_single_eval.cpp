@@ -10,10 +10,18 @@
 
 int main(int argc, char** argv) {
 
-    // Parameters
+    // Folders and filenames
     std::string root_folder = "../dataset/sod/";
     std::string reference_filename = root_folder + "meshes/ref.ply";
-    std::string reconstruction_filename = root_folder + "meshes/024.ply";
+    std::string reconstruction_filename = root_folder + "meshes/030.ply";
+
+    // Evaluation parameters
+    int ref_samples = 50000;
+    int rec_sample_mult = 5;
+
+    double accuracy_percentage = 0.95;
+    // double completeness_tolerance = 0.0700127;
+    double completeness_tolerance_mult = 4;
 
     // Read meshes
     Mesh reference_mesh = ReadPly(reference_filename);
@@ -29,8 +37,8 @@ int main(int argc, char** argv) {
 
 
     // PointCloud reference_pc = reference_mesh.AsPointCloud();
-    PointCloud reference_pc = reference_mesh.Sample(30000);
-    int num_samples = reconstruction_mesh.NumVertices() * 2;
+    PointCloud reference_pc = reference_mesh.Sample(ref_samples);
+    int num_samples = reconstruction_mesh.NumVertices() * rec_sample_mult;
     PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
 
     std::cout << "Reference point cloud: "
@@ -40,38 +48,40 @@ int main(int argc, char** argv) {
               << "\n\tnum points: " << reconstruction_pc.NumPoints() << std::endl;
 
     // Compute accuracy (rec to ref)
-    double accuracy_percentage = 0.95;
-
     std::cout << "Computing distance ... " << std::flush;
     auto time_begin = std::chrono::steady_clock::now();
 
     std::vector<float> rec_to_ref = reference_pc.ComputeDistance(reconstruction_pc);
-    double rec_to_ref_dist = MeanDistance(rec_to_ref);
-    double accuracy = AccuracyMeasure(rec_to_ref, accuracy_percentage);
+    double rec_to_ref_mean = MeanDistance(rec_to_ref);
+    double rec_to_ref_median = Percentile(rec_to_ref, 0.5);
+    double accuracy = Percentile(rec_to_ref, accuracy_percentage);
 
     auto time_end = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed = time_end - time_begin;
     std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
 
     // Compute completeness (ref to rec)
-    double completeness_tolerance = 2 * accuracy;
+    double completeness_tolerance = rec_to_ref_median * completeness_tolerance_mult;
 
     std::cout << "Computing distance ... " << std::flush;
     time_begin = std::chrono::steady_clock::now();
 
     std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistance(reference_pc);
-    double ref_to_rec_dist = MeanDistance(ref_to_rec);
-    double completeness = CompletenessMeausre(ref_to_rec, completeness_tolerance);
+    double ref_to_rec_mean = MeanDistance(ref_to_rec);
+    double ref_to_rec_median = Percentile(rec_to_ref, 0.5);
+    double completeness = Completeness(ref_to_rec, completeness_tolerance);
 
     time_end = std::chrono::steady_clock::now();
     time_elapsed = time_end - time_begin;
     std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
 
     // Output
-    std::cout << "Rec to ref distance: " << rec_to_ref_dist << std::endl;
+    std::cout << "Rec to ref mean: " << rec_to_ref_mean << std::endl;
+    std::cout << "Rec to ref median: " << rec_to_ref_median << std::endl;
     std::cout << "Accuracy (" << accuracy_percentage << "): " << accuracy << std::endl;
 
-    std::cout << "Ref to rec distance: " << ref_to_rec_dist << std::endl;
+    std::cout << "Ref to rec mean: " << ref_to_rec_mean << std::endl;
+    std::cout << "Ref to rec median: " << ref_to_rec_median << std::endl;
     std::cout << "Completeness (" << completeness_tolerance << "): " << completeness << std::endl;
 
     // Write point clouds to file (for debugging)

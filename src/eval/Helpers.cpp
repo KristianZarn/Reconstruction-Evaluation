@@ -64,7 +64,7 @@ double MeanDistance(const std::vector<float>& distances) {
     return (sum / distances.size());
 }
 
-double AccuracyMeasure(const std::vector<float>& distances, double percentage) {
+double Percentile(const std::vector<float>& distances, double percentage) {
     assert(percentage >= 0.0 && percentage < 1.0);
 
     // Copy original vector and sort it
@@ -76,7 +76,7 @@ double AccuracyMeasure(const std::vector<float>& distances, double percentage) {
     return distances_copy[idx];
 }
 
-double CompletenessMeausre(const std::vector<float>& distances, double tolerance) {
+double Completeness(const std::vector<float>& distances, double tolerance) {
     int inlier_sum = 0;
     for (float distance : distances) {
         if (distance <= tolerance) {

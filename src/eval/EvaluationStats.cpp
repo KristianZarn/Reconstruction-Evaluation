@@ -3,11 +3,17 @@
 #include <iostream>
 #include <fstream>
 
-EvaluationStats::EvaluationStats(std::string name, int samples) :
-        ref_name(std::move(name)), ref_samples(samples) {}
+EvaluationStats::EvaluationStats(std::string name,
+                                 int samples,
+                                 double accuracy_percentage,
+                                 double completeness_tolerance) :
+        ref_name_(std::move(name)),
+        ref_samples_(samples),
+        accuracy_percentage_(accuracy_percentage),
+        completeness_tolerance_(completeness_tolerance) {}
 
 int EvaluationStats::Size() {
-    return static_cast<int>(mesh_names.size());
+    return static_cast<int>(mesh_names_.size());
 }
 
 void EvaluationStats::AddMeshComparison(const std::string& mesh_name,
@@ -16,12 +22,12 @@ void EvaluationStats::AddMeshComparison(const std::string& mesh_name,
                                         double accuracy,
                                         double ref_to_rec_mean,
                                         double completeness) {
-    mesh_names.push_back(mesh_name);
-    mesh_samples.push_back(samples);
-    rec_to_ref_means.push_back(rec_to_ref_mean);
-    accuracies.push_back(accuracy);
-    ref_to_rec_means.push_back(ref_to_rec_mean);
-    completenesses.push_back(completeness);
+    mesh_names_.push_back(mesh_name);
+    mesh_samples_.push_back(samples);
+    rec_to_ref_means_.push_back(rec_to_ref_mean);
+    accuracies_.push_back(accuracy);
+    ref_to_rec_means_.push_back(ref_to_rec_mean);
+    completenesses_.push_back(completeness);
 }
 
 void EvaluationStats::WriteStatsToFile(const std::string& filename) {
@@ -31,7 +37,11 @@ void EvaluationStats::WriteStatsToFile(const std::string& filename) {
         return;
     }
 
-    outfile << "Reference: " << ref_name << "; samples: " << ref_samples << "\n";
+    outfile << "Reference: " << ref_name_
+            << "; Samples: " << ref_samples_
+            << "; Accuracy percent: " << accuracy_percentage_
+            << "; Completeness tolerance: " << completeness_tolerance_ << "\n";
+
     outfile << "Names,\t"
             << "Samples,\t"
             << "RecToRef,\t"
@@ -39,13 +49,13 @@ void EvaluationStats::WriteStatsToFile(const std::string& filename) {
             << "RefToRec,\t"
             << "Completeness\n";
 
-    auto num_comparisons = mesh_names.size();
+    auto num_comparisons = mesh_names_.size();
     for (int i = 0; i < num_comparisons; i++) {
-        outfile << mesh_names[i] << ",\t"
-                << mesh_samples[i] << ",\t"
-                << rec_to_ref_means[i] << ",\t"
-                << accuracies[i] << ",\t"
-                << ref_to_rec_means[i] << ",\t"
-                << completenesses[i] << "\n";
+        outfile << mesh_names_[i] << ",\t"
+                << mesh_samples_[i] << ",\t"
+                << rec_to_ref_means_[i] << ",\t"
+                << accuracies_[i] << ",\t"
+                << ref_to_rec_means_[i] << ",\t"
+                << completenesses_[i] << "\n";
     }
 }

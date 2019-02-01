@@ -11,7 +11,7 @@
 Mesh ReadPly(const std::string& filename);
 
 double MeanDistance(const std::vector<float>& distances);
-double AccuracyMeasure(const std::vector<float>& distances, double percentage);
-double CompletenessMeausre(const std::vector<float>& distances, double tolerance);
+double Percentile(const std::vector<float>& distances, double percentage);
+double Completeness(const std::vector<float>& distances, double tolerance);
 
 #endif //SANDBOX_EVALUATION_HELPERS_H

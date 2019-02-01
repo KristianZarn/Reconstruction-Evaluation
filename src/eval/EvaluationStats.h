@@ -6,7 +6,10 @@
 
 class EvaluationStats {
 public:
-    EvaluationStats(std::string name, int samples);
+    EvaluationStats(std::string name,
+                    int samples,
+                    double accuracy_percentage,
+                    double completeness_tolerance);
 
     // Utility functions
     int Size();
@@ -23,17 +26,19 @@ public:
     void WriteStatsToFile(const std::string& filename);
 
 private:
-    std::string ref_name;
-    int ref_samples;
+    std::string ref_name_;
+    int ref_samples_;
+    double accuracy_percentage_;
+    double completeness_tolerance_;
 
-    std::vector<std::string> mesh_names;
-    std::vector<int> mesh_samples;
+    std::vector<std::string> mesh_names_;
+    std::vector<int> mesh_samples_;
 
-    std::vector<double> rec_to_ref_means;
-    std::vector<double> accuracies;
+    std::vector<double> rec_to_ref_means_;
+    std::vector<double> accuracies_;
 
-    std::vector<double> ref_to_rec_means;
-    std::vector<double> completenesses;
+    std::vector<double> ref_to_rec_means_;
+    std::vector<double> completenesses_;
 };
 
 
