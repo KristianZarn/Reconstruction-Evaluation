@@ -43,3 +43,7 @@ target_link_libraries(single_eval ${LIBRARIES})
 add_executable(batch_eval main_batch_eval.cpp ${SOURCE_FILES})
 target_include_directories(batch_eval PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(batch_eval ${LIBRARIES})
+
+add_executable(sandbox main_sandbox.cpp ${SOURCE_FILES})
+target_include_directories(sandbox PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(sandbox ${LIBRARIES})

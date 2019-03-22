@@ -13,13 +13,13 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string root_folder = "../dataset/sod_nbv/";
+    std::string root_folder = "../dataset/frank_gen/";
     std::string meshes_folder = "meshes/";
     std::string result_filename = "evaluation.txt";
 
     std::string ref_filename = "ref.ply";
     int rec_min = 3;
-    int rec_max = 51;
+    int rec_max = 72;
     std::vector<std::string> rec_filenames;
     for (int i = rec_min; i <= rec_max; i++) {
         std::stringstream ss;
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     }
 
     // Evaluation parameters
-    int ref_samples = 30000;
+    int ref_samples = 50000;
     int rec_sample_mult = 2;
 
     double accuracy_percentage = 0.90;

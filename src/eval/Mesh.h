@@ -17,12 +17,22 @@ public:
     int NumFaces() const;
     Eigen::Vector3i Face(int f) const;
 
+    void AddVertexQuality(double q);
+    double VertexQuality(int v) const;
+
+    void AddFaceQuality(double q);
+    double FaceQuality(int f) const;
+
+    void ComputeVertexQualityFromFaceQuality();
     PointCloud Sample(int num_samples) const;
     PointCloud AsPointCloud() const;
 
 private:
     std::vector<Eigen::Vector3f> vertices;
     std::vector<Eigen::Vector3i> faces;
+
+    std::vector<double> vertex_quality;
+    std::vector<double> face_quality;
 };
 
 #endif //SANDBOX_EVALUATION_MESH_H

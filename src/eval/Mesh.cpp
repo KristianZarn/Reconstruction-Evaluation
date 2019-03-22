@@ -32,6 +32,49 @@ Eigen::Vector3i Mesh::Face(int f) const {
     return this->faces[f];
 }
 
+void Mesh::AddVertexQuality(double q) {
+    vertex_quality.push_back(q);
+}
+
+double Mesh::VertexQuality(int v) const {
+    assert(vertices.size() == vertex_quality.size() && v < vertex_quality.size());
+    return vertex_quality[v];
+}
+
+void Mesh::AddFaceQuality(double q) {
+    face_quality.push_back(q);
+}
+
+double Mesh::FaceQuality(int f) const {
+    assert(faces.size() == face_quality.size() && f < face_quality.size());
+    return face_quality[f];
+}
+
+void Mesh::ComputeVertexQualityFromFaceQuality() {
+    assert(faces.size() == face_quality.size());
+    vertex_quality.clear();
+
+    // Colect face quality per vertex
+    std::vector<std::vector<double>> quality_vec(vertices.size());
+
+    for (int i = 0; i < faces.size(); i++) {
+        Eigen::Vector3i face = faces[i];
+        double q = face_quality[i];
+        for (int j = 0; j < face.size(); j++) {
+            quality_vec[face[j]].push_back(q);
+        }
+    }
+
+    // Average quality of faces in vertex neighborhood
+    for (const auto& vec : quality_vec) {
+        double sum = 0.0;
+        for (double q : vec) {
+            sum += q;
+        }
+        vertex_quality.push_back(sum / vec.size());
+    }
+}
+
 PointCloud Mesh::Sample(const int num_samples) const {
 
     // Build probability distribution over faces
@@ -71,10 +114,11 @@ PointCloud Mesh::Sample(const int num_samples) const {
 
         // Pick random face
         double rand = distribution_face(generator);
-        int face_id = 0;
-        while (cumsum_area[face_id] < rand) {
-            face_id++;
-        }
+        // int face_id = 0;
+        // while (cumsum_area[face_id] < rand) {
+        //     face_id++;
+        // }
+        int face_id = std::lower_bound(cumsum_area.begin(), cumsum_area.end(), rand) - cumsum_area.begin();
 
         // Pick random point on face
         float r1 = distribution_point(generator);
@@ -87,7 +131,12 @@ PointCloud Mesh::Sample(const int num_samples) const {
 
         float tmp = sqrt(r1);
         Eigen::Vector3f point = (1 - tmp) * a + (tmp * (1 - r2)) * b + (tmp * r2) * c;
+
+        // Add point to point cloud
         point_cloud.AddPoint(point);
+        if (face_quality.size() == faces.size()) {
+            point_cloud.AddPointQuality(face_quality[face_id]);
+        }
     }
     return point_cloud;
 }
@@ -97,6 +146,13 @@ PointCloud Mesh::AsPointCloud() const {
     for (const auto& vertex : vertices) {
         point_cloud.AddPoint(vertex);
     }
+
+    if (vertex_quality.size() == vertices.size()) {
+        for (const auto& q : vertex_quality) {
+            point_cloud.AddPointQuality(q);
+        }
+    }
+
     return point_cloud;
 }
 

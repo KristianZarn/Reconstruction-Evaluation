@@ -56,6 +56,45 @@ Mesh ReadPly(const std::string& filename) {
     return mesh;
 }
 
+Mesh ReadPlyWithQuality(const std::string& ply_file, const std::string& quality_file) {
+    Mesh mesh = ReadPly(ply_file);
+
+    // Read ppa file
+    std::ifstream fs(quality_file);
+    if (!fs) {
+        throw std::runtime_error("failed to open " + quality_file);
+    }
+
+    double quality_value;
+    while (fs >> quality_value) {
+        mesh.AddFaceQuality(quality_value);
+    }
+
+    return mesh;
+}
+
+bool WritePointCloudWithDistance(const std::string& filename,
+                                 const PointCloud& pc,
+                                 const std::vector<float>& distances) {
+    assert(pc.NumPoints() == distances.size());
+    std::ofstream outfile(filename);
+    if (!outfile) {
+        std::cout << "Could not open file: " << filename << std::endl;
+        return false;
+    }
+
+    for (int i = 0; i < pc.NumPoints(); i++) {
+        const auto& point = pc.Point(i);
+        outfile << point(0) << " " << point(1) << " " << point(2);
+        if (pc.HasQuality()) {
+            outfile << " " << pc.PointQuality(i);
+        }
+        outfile << " " << distances[i];
+        outfile << "\n";
+    }
+    return true;
+}
+
 double MeanDistance(const std::vector<float>& distances) {
     double sum = 0.0;
     for (const auto distance : distances) {

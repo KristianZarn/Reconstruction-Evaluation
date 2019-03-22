@@ -20,6 +20,19 @@ Eigen::Vector3f PointCloud::Point(int p) const {
     return points[p];
 }
 
+void PointCloud::AddPointQuality(double q) {
+    point_quality.push_back(q);
+}
+
+double PointCloud::PointQuality(int p) const {
+    assert(points.size() == point_quality.size() && p < point_quality.size());
+    return point_quality[p];
+}
+
+bool PointCloud::HasQuality() const {
+    return points.size() == point_quality.size();
+}
+
 std::vector<float> PointCloud::ComputeDistanceBF(const PointCloud& query) const {
     std::vector<float> distances(static_cast<unsigned long>(query.NumPoints()));
 
@@ -79,7 +92,14 @@ void PointCloud::WriteToTxt(const std::string& filename) const {
         return;
     }
 
-    for (const auto& point : points) {
-        outfile << point(0) << " " << point(1) << " " << point(2) << "\n";
+    for (int i = 0; i < points.size(); i++) {
+        const auto& point = points[i];
+        outfile << point(0) << " " << point(1) << " " << point(2);
+
+        if (point_quality.size() == points.size()) {
+            outfile << " " << point_quality[i];
+        }
+
+        outfile << "\n";
     }
 }

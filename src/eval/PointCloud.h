@@ -13,6 +13,11 @@ public:
     int NumPoints() const;
     Eigen::Vector3f Point(int p) const;
 
+    void AddPointQuality(double q);
+    double PointQuality(int p) const;
+    bool HasQuality() const;
+
+    // Distance from query to this point cloud
     std::vector<float> ComputeDistanceBF(const PointCloud& query) const;
     std::vector<float> ComputeDistance(const PointCloud& query) const;
 
@@ -20,6 +25,7 @@ public:
 
 private:
     std::vector<Eigen::Vector3f> points;
+    std::vector<double> point_quality;
 };
 
 #endif //SANDBOX_EVALUATION_POINTCLOUD_H

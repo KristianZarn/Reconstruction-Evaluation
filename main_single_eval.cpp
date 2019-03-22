@@ -11,13 +11,13 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string root_folder = "../dataset/sod/";
+    std::string root_folder = "../dataset/boat_gen/";
     std::string reference_filename = root_folder + "meshes/ref.ply";
-    std::string reconstruction_filename = root_folder + "meshes/030.ply";
+    std::string reconstruction_filename = root_folder + "meshes/072.ply";
 
     // Evaluation parameters
     int ref_samples = 50000;
-    int rec_sample_mult = 5;
+    int rec_sample_mult = 2;
 
     double accuracy_percentage = 0.95;
     // double completeness_tolerance = 0.0700127;
@@ -38,8 +38,10 @@ int main(int argc, char** argv) {
 
     // PointCloud reference_pc = reference_mesh.AsPointCloud();
     PointCloud reference_pc = reference_mesh.Sample(ref_samples);
-    int num_samples = reconstruction_mesh.NumVertices() * rec_sample_mult;
-    PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
+
+    PointCloud reconstruction_pc = reconstruction_mesh.AsPointCloud();
+    // int num_samples = reconstruction_mesh.NumVertices() * rec_sample_mult;
+    // PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
 
     std::cout << "Reference point cloud: "
               << "\n\tnum points: " << reference_pc.NumPoints() << std::endl;
