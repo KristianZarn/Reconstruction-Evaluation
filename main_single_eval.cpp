@@ -19,9 +19,9 @@ int main(int argc, char** argv) {
     int ref_samples = 50000;
     int rec_sample_mult = 2;
 
-    double accuracy_percentage = 0.95;
+    double accuracy_percentage = 0.90;
     // double completeness_tolerance = 0.0700127;
-    double completeness_tolerance_mult = 4;
+    double completeness_tolerance_mult = 2;
 
     // Read meshes
     Mesh reference_mesh = ReadPly(reference_filename);

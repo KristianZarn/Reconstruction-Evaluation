@@ -13,13 +13,13 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string root_folder = "../dataset/frank_gen/";
+    std::string root_folder = "../dataset/hydrant_nbv/";
     std::string meshes_folder = "meshes/";
     std::string result_filename = "evaluation.txt";
 
     std::string ref_filename = "ref.ply";
     int rec_min = 3;
-    int rec_max = 72;
+    int rec_max = 52;
     std::vector<std::string> rec_filenames;
     for (int i = rec_min; i <= rec_max; i++) {
         std::stringstream ss;

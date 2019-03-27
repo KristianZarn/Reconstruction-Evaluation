@@ -44,6 +44,10 @@ add_executable(batch_eval main_batch_eval.cpp ${SOURCE_FILES})
 target_include_directories(batch_eval PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(batch_eval ${LIBRARIES})
 
-add_executable(sandbox main_sandbox.cpp ${SOURCE_FILES})
-target_include_directories(sandbox PRIVATE ${INCLUDE_DIRS})
-target_link_libraries(sandbox ${LIBRARIES})
+add_executable(single_quality main_single_quality.cpp ${SOURCE_FILES})
+target_include_directories(single_quality PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(single_quality ${LIBRARIES})
+
+add_executable(batch_quality main_batch_quality.cpp ${SOURCE_FILES})
+target_include_directories(batch_quality PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(batch_quality ${LIBRARIES})
