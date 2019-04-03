@@ -13,13 +13,15 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string root_folder = "../dataset/hydrant_nbv/";
+    std::string dataset_name = "fountain_nbv";
+
+    std::string root_folder = "../dataset/" + dataset_name + "/";
     std::string meshes_folder = "meshes/";
-    std::string result_filename = "evaluation.txt";
+    std::string result_filename = "eval_" + dataset_name + ".txt";
 
     std::string ref_filename = "ref.ply";
     int rec_min = 3;
-    int rec_max = 52;
+    int rec_max = 72;
     std::vector<std::string> rec_filenames;
     for (int i = rec_min; i <= rec_max; i++) {
         std::stringstream ss;
@@ -28,11 +30,11 @@ int main(int argc, char** argv) {
     }
 
     // Evaluation parameters
-    int ref_samples = 50000;
-    int rec_sample_mult = 2;
+    int ref_samples = 100000;
+    int rec_sample_mult = 3;
 
     double accuracy_percentage = 0.90;
-    double completeness_tolerance = 0.0945234;
+    double completeness_tolerance = 0.14;
     // double completeness_tolerance_mult = 3.0;
 
     // Perform evaluation

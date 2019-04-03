@@ -11,17 +11,19 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string root_folder = "../dataset/boat_gen/";
+    std::string dataset_name = "frank_nbv";
+
+    std::string root_folder = "../dataset/" + dataset_name + "/";
     std::string reference_filename = root_folder + "meshes/ref.ply";
     std::string reconstruction_filename = root_folder + "meshes/072.ply";
 
     // Evaluation parameters
-    int ref_samples = 50000;
-    int rec_sample_mult = 2;
+    int ref_samples = 100000;
+    int rec_sample_mult = 3;
 
     double accuracy_percentage = 0.90;
-    // double completeness_tolerance = 0.0700127;
-    double completeness_tolerance_mult = 2;
+    double completeness_tolerance = 0.1;
+    // double completeness_tolerance_mult = 4;
 
     // Read meshes
     Mesh reference_mesh = ReadPly(reference_filename);
@@ -63,14 +65,14 @@ int main(int argc, char** argv) {
     std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
 
     // Compute completeness (ref to rec)
-    double completeness_tolerance = rec_to_ref_median * completeness_tolerance_mult;
+    // double completeness_tolerance = rec_to_ref_median * completeness_tolerance_mult;
 
     std::cout << "Computing distance ... " << std::flush;
     time_begin = std::chrono::steady_clock::now();
 
     std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistance(reference_pc);
     double ref_to_rec_mean = MeanDistance(ref_to_rec);
-    double ref_to_rec_median = Percentile(rec_to_ref, 0.5);
+    double ref_to_rec_median = Percentile(ref_to_rec, 0.5);
     double completeness = Completeness(ref_to_rec, completeness_tolerance);
 
     time_end = std::chrono::steady_clock::now();

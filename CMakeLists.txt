@@ -51,3 +51,7 @@ target_link_libraries(single_quality ${LIBRARIES})
 add_executable(batch_quality main_batch_quality.cpp ${SOURCE_FILES})
 target_include_directories(batch_quality PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(batch_quality ${LIBRARIES})
+
+add_executable(find_tolerance main_find_tolerance.cpp ${SOURCE_FILES})
+target_include_directories(find_tolerance PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(find_tolerance ${LIBRARIES})
