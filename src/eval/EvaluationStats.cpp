@@ -17,12 +17,14 @@ int EvaluationStats::Size() {
 }
 
 void EvaluationStats::AddMeshComparison(const std::string& mesh_name,
+                                        int index,
                                         int samples,
                                         double rec_to_ref_mean,
                                         double accuracy,
                                         double ref_to_rec_mean,
                                         double completeness) {
     mesh_names_.push_back(mesh_name);
+    mesh_indices_.push_back(index);
     mesh_samples_.push_back(samples);
     rec_to_ref_means_.push_back(rec_to_ref_mean);
     accuracies_.push_back(accuracy);
@@ -43,6 +45,7 @@ void EvaluationStats::WriteStatsToFile(const std::string& filename) {
             << "; Completeness tolerance: " << completeness_tolerance_ << "\n";
 
     outfile << "Names,\t"
+            << "Indices,\t"
             << "Samples,\t"
             << "RecToRef,\t"
             << "Accuracy,\t"
@@ -52,6 +55,7 @@ void EvaluationStats::WriteStatsToFile(const std::string& filename) {
     auto num_comparisons = mesh_names_.size();
     for (int i = 0; i < num_comparisons; i++) {
         outfile << mesh_names_[i] << ",\t"
+                << mesh_indices_[i] << ",\t"
                 << mesh_samples_[i] << ",\t"
                 << rec_to_ref_means_[i] << ",\t"
                 << accuracies_[i] << ",\t"

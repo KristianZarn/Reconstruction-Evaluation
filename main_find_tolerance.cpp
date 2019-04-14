@@ -11,7 +11,7 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string dataset_name = "fountain_nbv";
+    std::string dataset_name = "statue_nbv";
     std::string reference_filename = "ref.ply";
     std::string reconstruction_filename = "072.ply";
 

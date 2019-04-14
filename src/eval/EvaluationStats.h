@@ -16,6 +16,7 @@ public:
 
     // Add new mesh comparison
     void AddMeshComparison(const std::string& mesh_name,
+                           int index,
                            int samples,
                            double rec_to_ref_mean,
                            double accuracy,
@@ -32,6 +33,7 @@ private:
     double completeness_tolerance_;
 
     std::vector<std::string> mesh_names_;
+    std::vector<int> mesh_indices_;
     std::vector<int> mesh_samples_;
 
     std::vector<double> rec_to_ref_means_;
