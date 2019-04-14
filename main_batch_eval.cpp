@@ -9,6 +9,7 @@
 #include "eval/PointCloud.h"
 #include "eval/Helpers.h"
 #include "eval/EvaluationStats.h"
+#include "eval/Pca.h"
 
 int main(int argc, char** argv) {
 
@@ -27,11 +28,21 @@ int main(int argc, char** argv) {
     int rec_sample_mult = 3;
 
     double accuracy_percentage = 0.90;
-    double completeness_tolerance = 0.14;
+    double completeness_percentage = 0.0075;
+    // double completeness_tolerance = 0.14;
 
     // Read and sample reference mesh
     Mesh ref_mesh = ReadPly(root_folder + ref_filename);
     PointCloud ref_pc = ref_mesh.Sample(ref_samples);
+
+    // PCA for completeness tolerance
+    Eigen::MatrixXf data = ref_pc.PointMatrix();
+    Pca<float> pca;
+    pca.SetInput(data);
+    pca.Compute();
+    Eigen::VectorXf eigen_values = pca.GetEigenValues();
+    double completeness_tolerance = eigen_values(0) * completeness_percentage;
+    std::cout << "Completeness tolerance: \n\t" << completeness_tolerance << std::endl;
 
     // Perform evaluation for given labels
     for (const auto& label : labels) {

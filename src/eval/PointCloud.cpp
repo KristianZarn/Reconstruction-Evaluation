@@ -20,6 +20,16 @@ Eigen::Vector3f PointCloud::Point(int p) const {
     return points[p];
 }
 
+Eigen::MatrixXf PointCloud::PointMatrix() const {
+
+    // Convert points to eigen matrix
+    Eigen::MatrixXf data(points.size(), 3);
+    for (int i = 0; i < points.size(); i++) {
+        data.row(i) = points[i];
+    }
+    return data;
+}
+
 void PointCloud::AddPointQuality(double q) {
     point_quality.push_back(q);
 }

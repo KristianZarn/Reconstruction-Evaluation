@@ -11,13 +11,13 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string dataset_name = "statue_nbv";
-    std::string reference_filename = "ref.ply";
-    std::string reconstruction_filename = "072.ply";
+    std::string dataset_name = "krava";
+    std::vector<std::string> labels = {"gen_20", "gen_25",  "gen_30", "nbv"};
+
+    std::string reference_filename = dataset_name + ".ply";
+    std::string reconstruction_filename = "071.ply";
 
     std::string root_folder = "../dataset/" + dataset_name + "/";
-    std::string meshes_folder = "meshes/";
-    std::string result_filename = "ctol_" + dataset_name + ".txt";
 
     // Evaluation parameters
     int ref_samples = 100000;
@@ -28,40 +28,43 @@ int main(int argc, char** argv) {
     double ctol_step = 0.01;
     double ctol_max = 0.2;
 
-    // Read meshes
-    Mesh reference_mesh = ReadPly(root_folder + meshes_folder + reference_filename);
-    Mesh reconstruction_mesh = ReadPly(root_folder + meshes_folder + reconstruction_filename);
-
+    // Read and sample reference mesh
+    Mesh reference_mesh = ReadPly(root_folder + reference_filename);
     PointCloud reference_pc = reference_mesh.Sample(ref_samples);
-    int num_samples = reconstruction_mesh.NumVertices() * rec_sample_mult;
-    PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
 
-    // Compute distance (ref to rec)
-    std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistance(reference_pc);
+    // Compute tolerance for given labels
+    for (const auto& label : labels) {
+        std::string meshes_folder = "evaluation_" + label + "/";
+        std::string result_filename = "ctol_" + dataset_name + "_" + label + ".txt";
 
-    // Open file
-    std::ofstream outfile(root_folder + result_filename);
-    if (!outfile) {
-        std::cout << "Could not open file: " << (root_folder + result_filename) << std::endl;
-        return EXIT_FAILURE;
+        // Read and sample reconstruction mesh
+        Mesh reconstruction_mesh = ReadPly(root_folder + meshes_folder + reconstruction_filename);
+        int num_samples = reconstruction_mesh.NumVertices() * rec_sample_mult;
+        PointCloud reconstruction_pc = reconstruction_mesh.Sample(num_samples);
+
+        // Compute distance (ref to rec)
+        std::vector<float> ref_to_rec = reconstruction_pc.ComputeDistance(reference_pc);
+
+        // Open file
+        std::ofstream outfile(root_folder + result_filename);
+        if (!outfile) {
+            std::cout << "Could not open file: " << (root_folder + result_filename) << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        double completeness_tolerance = ctol_min;
+        while (completeness_tolerance < ctol_max) {
+
+            // Compute completeness
+            double completeness = Completeness(ref_to_rec, completeness_tolerance);
+
+            // Write to file
+            outfile << completeness_tolerance << "\t" << completeness << "\n";
+
+            completeness_tolerance += ctol_step;
+        }
+        std::cout << "Results written to: \n\t" << root_folder + result_filename << std::endl;
     }
-
-    auto time_begin = std::chrono::steady_clock::now();
-    double completeness_tolerance = ctol_min;
-    while (completeness_tolerance < ctol_max) {
-
-        // Compute completeness
-        double completeness = Completeness(ref_to_rec, completeness_tolerance);
-
-        // Write to file
-        outfile << completeness_tolerance << "\t" << completeness << "\n";
-
-        completeness_tolerance += ctol_step;
-    }
-    auto time_end = std::chrono::steady_clock::now();
-    auto time_elapsed = time_end - time_begin;
-    std::cout << "DONE in " << time_elapsed.count() << " s" << std::endl;
-    std::cout << "Results written to: \n\t" << root_folder + result_filename;
 
     return EXIT_SUCCESS;
 }

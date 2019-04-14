@@ -17,6 +17,7 @@ set(SOURCE_FILES
         src/eval/PointCloud.h
         src/eval/PointCloud.cpp
         src/eval/nanoflann.hpp
+        src/eval/Pca.h
         src/eval/Helpers.h
         src/eval/Helpers.cpp
         src/eval/EvaluationStats.h
@@ -55,3 +56,7 @@ target_link_libraries(batch_quality ${LIBRARIES})
 add_executable(find_tolerance main_find_tolerance.cpp ${SOURCE_FILES})
 target_include_directories(find_tolerance PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(find_tolerance ${LIBRARIES})
+
+add_executable(pca main_pca.cpp ${SOURCE_FILES})
+target_include_directories(pca PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(pca ${LIBRARIES})

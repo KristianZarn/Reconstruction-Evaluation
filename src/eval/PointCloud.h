@@ -12,6 +12,7 @@ public:
     void AddPoint(const Eigen::Vector3f& point);
     int NumPoints() const;
     Eigen::Vector3f Point(int p) const;
+    Eigen::MatrixXf PointMatrix() const;
 
     void AddPointQuality(double q);
     double PointQuality(int p) const;
