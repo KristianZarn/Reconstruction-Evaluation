@@ -13,7 +13,7 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string dataset_name = "krava";
+    std::string dataset_name = "frank";
     std::string root_folder = "../dataset/" + dataset_name + "/";
     std::string ref_filename = dataset_name + ".ply";
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     Mesh reference_mesh = ReadPly(root_folder + ref_filename);
     int ref_samples = 100000;
     PointCloud reference_pc = reference_mesh.Sample(ref_samples);
-    reference_pc.WriteToTxt(root_folder + "ref_pc.dat");
+    // reference_pc.WriteToTxt(root_folder + "ref_pc.dat");
 
     // PCA
     Eigen::MatrixXf data = reference_pc.PointMatrix();
@@ -31,6 +31,11 @@ int main(int argc, char** argv) {
     Eigen::VectorXf eigen_values = pca.GetEigenValues();
     std::cout << "Eigen values:\n" << eigen_values << std::endl;
     std::cout << "Biggest eigen value:\n" << eigen_values(0) << std::endl;
+
+    // Completeness
+    double completeness_percentage = 0.01;
+    double completeness_tolerance = eigen_values(0) * completeness_percentage;
+    std::cout << "Completeness tolerance: \n\t" << completeness_tolerance << std::endl;
 
     return EXIT_SUCCESS;
 }

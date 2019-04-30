@@ -11,8 +11,9 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string dataset_name = "krava";
-    std::vector<std::string> labels = {"gen_20", "gen_25",  "gen_30", "nbv"};
+    std::string dataset_name = "frank";
+    // std::vector<std::string> labels = {"gen_20", "gen_40",  "gen_60", "nbv"};
+    std::vector<std::string> labels = {"gen_20", "gen_40",  "gen_60"};
 
     std::string reference_filename = dataset_name + ".ply";
     std::string reconstruction_filename = "071.ply";
@@ -21,7 +22,7 @@ int main(int argc, char** argv) {
 
     // Evaluation parameters
     int ref_samples = 100000;
-    int rec_sample_mult = 3;
+    int rec_sample_mult = 2;
 
     // Completeness tolerance parameters
     double ctol_min = 0;

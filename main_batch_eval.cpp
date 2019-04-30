@@ -14,22 +14,23 @@
 int main(int argc, char** argv) {
 
     // Folders and filenames
-    std::string dataset_name = "krava";
-    std::vector<std::string> labels = {"gen_20", "gen_25",  "gen_30", "nbv"};
+    std::string dataset_name = "frank";
+    // std::vector<std::string> labels = {"gen_20", "gen_40",  "gen_60", "nbv"};
+    // std::vector<std::string> labels = {"gen_20", "gen_40",  "gen_60"};
+    std::vector<std::string> labels = {"nbv"};
 
     std::string root_folder = "../dataset/" + dataset_name + "/";
     std::string ref_filename = dataset_name + ".ply";
 
     int rec_min = 2;
-    int rec_max = 71;
+    int rec_max = 81;
 
     // Evaluation parameters
     int ref_samples = 100000;
-    int rec_sample_mult = 3;
+    int rec_sample_mult = 2;
 
     double accuracy_percentage = 0.90;
-    double completeness_percentage = 0.0075;
-    // double completeness_tolerance = 0.14;
+    double completeness_percentage = 0.01;
 
     // Read and sample reference mesh
     Mesh ref_mesh = ReadPly(root_folder + ref_filename);
@@ -96,7 +97,7 @@ int main(int argc, char** argv) {
 
         // Write results
         eval_stats.WriteStatsToFile(root_folder + result_filename);
-        std::cout << "Stats written to: \n\t" << root_folder + result_filename;
+        std::cout << "Stats written to: \n\t" << root_folder + result_filename << std::endl;
     }
 
     return EXIT_SUCCESS;
