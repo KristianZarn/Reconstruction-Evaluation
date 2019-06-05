@@ -134,8 +134,33 @@ PointCloud Mesh::Sample(const int num_samples) const {
 
         // Add point to point cloud
         point_cloud.AddPoint(point);
+        point_cloud.AddPointId(face_id);
         if (face_quality.size() == faces.size()) {
             point_cloud.AddPointQuality(face_quality[face_id]);
+        }
+    }
+    return point_cloud;
+}
+
+PointCloud Mesh::SampleSpecial(int num_samples) const {
+
+    // Same as sample but also includes triangle centers
+    PointCloud point_cloud = this->Sample(num_samples);
+    for (int i = 0; i < faces.size(); i++) {
+
+        const Eigen::Vector3i& face = faces[i];
+        const Eigen::Vector3f& a = vertices[face(0)];
+        const Eigen::Vector3f& b = vertices[face(1)];
+        const Eigen::Vector3f& c = vertices[face(2)];
+
+        // Face center
+        Eigen::Vector3f point = (a + b + c) / 3.0f;
+
+        // Add point to point cloud
+        point_cloud.AddPoint(point);
+        point_cloud.AddPointId(i);
+        if (face_quality.size() == faces.size()) {
+            point_cloud.AddPointQuality(face_quality[i]);
         }
     }
     return point_cloud;

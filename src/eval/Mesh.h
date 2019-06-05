@@ -25,6 +25,7 @@ public:
 
     void ComputeVertexQualityFromFaceQuality();
     PointCloud Sample(int num_samples) const;
+    PointCloud SampleSpecial(int num_samples) const;
     PointCloud AsPointCloud() const;
 
 private:

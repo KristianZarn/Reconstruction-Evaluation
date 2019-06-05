@@ -18,6 +18,10 @@ public:
     double PointQuality(int p) const;
     bool HasQuality() const;
 
+    void AddPointId(int id);
+    double PointId(int p) const;
+    bool HasId() const;
+
     // Distance from query to this point cloud
     std::vector<float> ComputeDistanceBF(const PointCloud& query) const;
     std::vector<float> ComputeDistance(const PointCloud& query) const;
@@ -26,6 +30,7 @@ public:
 
 private:
     std::vector<Eigen::Vector3f> points;
+    std::vector<int> point_ids;
     std::vector<double> point_quality;
 };
 

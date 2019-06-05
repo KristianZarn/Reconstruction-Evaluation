@@ -43,6 +43,19 @@ bool PointCloud::HasQuality() const {
     return points.size() == point_quality.size();
 }
 
+void PointCloud::AddPointId(int id) {
+    point_ids.push_back(id);
+}
+
+double PointCloud::PointId(int p) const {
+    assert(points.size() == point_ids.size() && p < point_ids.size());
+    return point_ids[p];
+}
+
+bool PointCloud::HasId() const {
+    return points.size() == point_ids.size();
+}
+
 std::vector<float> PointCloud::ComputeDistanceBF(const PointCloud& query) const {
     std::vector<float> distances(static_cast<unsigned long>(query.NumPoints()));
 
@@ -102,11 +115,26 @@ void PointCloud::WriteToTxt(const std::string& filename) const {
         return;
     }
 
+    // Write header
+    outfile << "x\ty\tz";
+    if (this->HasId()) {
+        outfile << "\tid";
+    }
+    if (this->HasQuality()) {
+        outfile << "\tquality";
+    }
+    outfile << "\n";
+
+    // Write data
     for (int i = 0; i < points.size(); i++) {
         const auto& point = points[i];
         outfile << point(0) << " " << point(1) << " " << point(2);
 
-        if (point_quality.size() == points.size()) {
+        if (this->HasId()) {
+            outfile << " " << point_ids[i];
+        }
+
+        if (this->HasQuality()) {
             outfile << " " << point_quality[i];
         }
 

@@ -1,21 +1,20 @@
 
-dataset = 'statue_gen';
-data_folder = strcat('../dataset/', dataset, '/raw_export/');
+dataset = 'quality_statue';
+data_folder = strcat('../dataset/', dataset, '/gen_20/');
 min_pc_num = 3;
 max_pc_num = 71;
 
-% PPA, GSD, MPA
-correlation = zeros(length(min_pc_num:max_pc_num), 3);
+% PPA, GSD
+correlation = zeros(length(min_pc_num:max_pc_num), 2);
 
 figure(1); clf;
-plot_titles = {'Mera PPA', 'Mera GSD', 'Mera MPA'};
+plot_titles = {'Mera PPA', 'Mera GSD'};
 for i = min_pc_num:max_pc_num
     fprintf('\tShowing data for point cloud number: %03d\n', i);
     
     pc_filenames = {
         sprintf('%s%03d_ppa.dat', data_folder, i)
         sprintf('%s%03d_gsd.dat', data_folder, i)};
-%         sprintf('%s%03d_mpa.dat', data_folder, i)};
     
     num_plots = length(pc_filenames);
     for j = 1:num_plots
@@ -25,7 +24,7 @@ for i = min_pc_num:max_pc_num
         % Quality per point
         quality = rec_dat(:, 4);
 
-        % Clamp quality values (useful for gsd)
+        % Clamp quality values (for gsd)
         if (j == 2)
             max_q = prctile(quality, 90);
             mask = (quality > max_q) | (quality == 0.0);
@@ -42,6 +41,7 @@ for i = min_pc_num:max_pc_num
         xlabel('Ocena kvalitete');
         ylabel('Razdalja do reference');
         
+        % Compute correlation coefficient
         tmp = corrcoef(quality, rec_to_ref);
         correlation(i - min_pc_num + 1, j) = tmp(2, 1);
     end

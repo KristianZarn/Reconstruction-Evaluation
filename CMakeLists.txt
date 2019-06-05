@@ -60,3 +60,7 @@ target_link_libraries(find_tolerance ${LIBRARIES})
 add_executable(pca main_pca.cpp ${SOURCE_FILES})
 target_include_directories(pca PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(pca ${LIBRARIES})
+
+add_executable(sandbox sandbox.cpp ${SOURCE_FILES})
+target_include_directories(sandbox PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(sandbox ${LIBRARIES})
