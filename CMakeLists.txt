@@ -20,12 +20,15 @@ set(SOURCE_FILES
         src/eval/Pca.h
         src/eval/Helpers.h
         src/eval/Helpers.cpp
+        src/eval/IPCameraStats.h
+        src/eval/IPCameraStats.cpp
         src/eval/EvaluationStats.h
         src/eval/EvaluationStats.cpp
         src/tinyply/tinyply.h
         src/tinyply/tinyply.cpp)
 
 set(INCLUDE_DIRS
+        ${CMAKE_SOURCE_DIR}/libraries
         ${CMAKE_SOURCE_DIR}/src
         ${Boost_INCLUDE_DIRS}
         ${FLANN_INCLUDE_DIRS})
@@ -35,6 +38,9 @@ set(LIBRARIES
         OpenMP::OpenMP_CXX
         ${Boost_LIBRARIES}
         ${FLANN_LIBRARIES})
+
+# SUBDIRECTORIES
+add_subdirectory(libraries)
 
 # Targets
 add_executable(single_eval main_single_eval.cpp ${SOURCE_FILES})
@@ -64,3 +70,7 @@ target_link_libraries(pca ${LIBRARIES})
 add_executable(sandbox sandbox.cpp ${SOURCE_FILES})
 target_include_directories(sandbox PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(sandbox ${LIBRARIES})
+
+add_executable(parse_camera_stats main_parse_camera_stats.cpp ${SOURCE_FILES})
+target_include_directories(parse_camera_stats PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(parse_camera_stats ${LIBRARIES} ImGuizmo)
