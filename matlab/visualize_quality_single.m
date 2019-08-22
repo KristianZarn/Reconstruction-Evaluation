@@ -1,6 +1,6 @@
 
-dataset = 'quality_statue';
-data_folder = strcat('../dataset/', dataset, '/gen_20/');
+dataset = 'fountain';
+data_folder = strcat('../dataset/_bak/', dataset, '/gen/');
 
 pc_num = 14;
 

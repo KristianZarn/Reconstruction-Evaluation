@@ -21,20 +21,17 @@ public:
     void AddPose(int pose_id, const glm::vec3& camera_pos, const glm::vec3& camera_rot,
                  const glm::vec3& nbv_pos, const glm::vec3& nbv_rot, int best_view_pick);
 
-    // Compute mean error (obsolete)
-    double ComputeMeanError();
-
     // Compute mean pos error
     double ComputeMeanPosError();
 
     // Compute mean rot error
     double ComputeMeanRotError();
 
-    // Compute mean camera distance
-    double ComputeMeanCameraDistance();
-
     // Compute max camera distance
     double ComputeMaxCameraDistance();
+
+    // Compute average nbv index
+    double ComputeAvgIndex();
 
     // Write to file
     void WriteStatsToFile(std::string filename);

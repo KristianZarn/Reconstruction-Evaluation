@@ -1,5 +1,5 @@
 
-dataset = 'quality_statue';
+dataset = 'quality_hydrant';
 data_folder = strcat('../dataset/', dataset, '/gen_20/');
 min_pc_num = 3;
 max_pc_num = 71;
@@ -32,7 +32,8 @@ for i = min_pc_num:max_pc_num
         end
 
         % Accuracy
-        rec_to_ref = rec_dat(:, 5);
+%         rec_to_ref = rec_dat(:, 5);
+        rec_to_ref = log(rec_dat(:, 5));
 
         % Plot accuracy quality correlation
         subplot(num_plots, 1, j);
@@ -46,7 +47,7 @@ for i = min_pc_num:max_pc_num
         correlation(i - min_pc_num + 1, j) = tmp(2, 1);
     end
     
-    pause;
+%     pause;
 end
 
 output_filename = strcat('../dataset/', dataset, '/corr_', dataset, '.txt');

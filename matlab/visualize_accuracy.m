@@ -10,10 +10,14 @@ points = data(:, 1:3);
 accuracy = data(:, 5);
 
 % Normalize accuracy
-accuracy = -log(accuracy);
-max_acc = prctile(accuracy, 95);
+% Log and crop
+% accuracy = -log(accuracy);
+max_acc = prctile(accuracy, 90);
 mask = (accuracy > max_acc);
 accuracy(mask) = max_acc;
+
+% Flip
+accuracy = -accuracy;
 
 % Transform data to per face accuracy
 face_ids = data(:, 4);
@@ -26,8 +30,8 @@ for i = 1:length(face_ids)
 end
 
 face_accuracy = face_accuracy ./ face_normalization;
-filename_out = '../dataset/_other/ex/007.acc';
-dlmwrite(filename_out, face_accuracy);
+% filename_out = '../dataset/_other/ex/007.acc_crop';
+% dlmwrite(filename_out, face_accuracy);
 
 % Plot
 % pc = pointCloud(points, 'Intensity', accuracy);

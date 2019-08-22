@@ -72,19 +72,9 @@ void IPCameraStats::AddPose(int pose_id, const glm::vec3& camera_pos, const glm:
             glm::value_ptr(nbv_world));
 
     glm::vec3 camera_front = -glm::column(camera_world, 2);
-    glm::vec3 nbv_front = -glm::column(nbv_world, 2);
-    double rot_error = glm::angle(camera_front, nbv_front);
+    glm::vec3 nbv_front = glm::column(nbv_world, 2);
+    double rot_error = glm::degrees(glm::angle(camera_front, nbv_front));
     rot_errors.push_back(rot_error);
-}
-
-double IPCameraStats::ComputeMeanError() {
-    auto num_poses = this->Size();
-    double error_sum = 0.0;
-    for (int i = 0; i < num_poses; i++) {
-        glm::vec3 diff = camera_positions[i] - nbv_positions[i];
-        error_sum += glm::length(diff);
-    }
-    return error_sum / num_poses;
 }
 
 double IPCameraStats::ComputeMeanPosError() {
@@ -103,20 +93,6 @@ double IPCameraStats::ComputeMeanRotError() {
     return (error_sum / rot_errors.size());
 }
 
-double IPCameraStats::ComputeMeanCameraDistance() {
-    auto num_poses = this->Size();
-    double distance_sum = 0.0;
-    int distance_count = 0;
-    for (int i = 0; i < num_poses; i++) {
-        for (int j = i + 1; j < num_poses; j++) {
-            glm::vec3 diff = camera_positions[i] - camera_positions[j];
-            distance_sum += glm::length(diff);
-            distance_count++;
-        }
-    }
-    return (distance_sum / distance_count);
-}
-
 double IPCameraStats::ComputeMaxCameraDistance() {
     auto num_poses = this->Size();
     double max_distance = 0.0;
@@ -130,6 +106,14 @@ double IPCameraStats::ComputeMaxCameraDistance() {
         }
     }
     return max_distance;
+}
+
+double IPCameraStats::ComputeAvgIndex() {
+    double index_sum = 0.0;
+    for (const auto& tmp : best_view_picks) {
+        index_sum += tmp;
+    }
+    return (index_sum / best_view_picks.size());
 }
 
 void IPCameraStats::WriteStatsToFile(std::string filename) {
@@ -156,7 +140,7 @@ void IPCameraStats::WriteStatsToFile(std::string filename) {
     outfile << "Mean position error: " << mean_pos_error << "\n";
 
     double mean_rot_error = ComputeMeanRotError();
-    outfile << "Mean rotation error: " << mean_rot_error << "\n";
+    outfile << "Mean rotation error: " << glm::degrees(mean_rot_error) << "\n";
 
     double max_camera_distance = ComputeMaxCameraDistance();
     outfile << "Max camera distance: " << max_camera_distance << "\n";
